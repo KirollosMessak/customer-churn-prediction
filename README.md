@@ -19,6 +19,10 @@ A telecom company loses customers every month, and keeping a customer is cheaper
 5. **Cross-validation:** compared the best models with 5-fold F1.
 6. **Threshold tuning:** chose the threshold that minimizes total business cost, using cross-validated predictions on the training data only.
 7. **Final evaluation:** tested once on the held-out test set.
+8. **Statistics:** t-test and chi-square tests, 95% confidence intervals and a bootstrap CI for the median.
+9. **Segmentation:** K-Means clustering (k = 3, chosen by the elbow method and silhouette score).
+10. **Dimensionality reduction:** PCA (15 of 30 components keep 90% of the variance).
+11. **Final model:** one scikit-learn pipeline (preprocessing + model) saved with joblib.
 
 ## Key findings
 
@@ -28,6 +32,10 @@ A telecom company loses customers every month, and keeping a customer is cheaper
 | Churn happens early | Most churners leave in their first months |
 | Higher bills, more churn | Churners pay $74.44/month vs $61.27 for those who stay |
 | Early support may reduce churn | Month-to-month customers with tech support churn 30.7% vs 50.4% without |
+| Churners really pay more | t-test p < 0.001; 95% CI $73.32–75.56 vs $60.42–62.11 |
+| Contract type is linked to churn | Chi-square p < 0.001; month-to-month churn 41.2–44.3% vs two-year 2.0–3.6% |
+| A high-risk segment exists | K-Means found "new and expensive" customers (13 months, $75/month) with 47% churn |
+| Feature engineering and PCA didn't help | F1 stayed at about 0.63: the limit is the data, not the model |
 
 ## Model comparison (churn class, test set)
 
@@ -59,6 +67,7 @@ At threshold 0.1 the model catches **99% of churners** while scoring only **49% 
 - **Check the data before the model.** A missing `drop(columns=['customerID'])` once created about 7,000 one-hot columns and a model that memorized customers. Checking `X_train.shape` caught it.
 - **When different models converge, the features are the limit.** Better data beats a fancier algorithm.
 - **Keep the test set honest.** The threshold was chosen with cross-validation on training data; the test set was used once.
+- **Unsupervised learning confirmed supervised results.** K-Means never saw the churn label, yet it isolated the same high-risk group.
 
 ## Limitations and next steps
 
