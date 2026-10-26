@@ -3,4 +3,6 @@ matplotlib
 seaborn
 scikit-learn
 xgboost
+scipy
+joblib
 jupyter
